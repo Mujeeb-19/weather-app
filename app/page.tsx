@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import WeatherCard from "@/components/WeatherCard"
+import WeatherCard from "@/components/WeatherCard";
 import { WeatherData } from "@/types/WeatherData";
 import styles from "./page.module.css";
 
@@ -17,19 +17,22 @@ export default function Home() {
       return;
     }
 
-    setError("");
+    setError(""); // Clear any previous error
 
     try {
       const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
       if (response.ok) {
         const data: WeatherData = await response.json();
         setWeatherData(data);
+        setError(""); // Clear error when successful
       } else {
         const errorMessage = await response.json();
         setError(errorMessage.message || "Failed to fetch weather data.");
+        setWeatherData(null); // Clear data if an error occurs
       }
     } catch (err) {
-      setError("An unexpected error occurred.");
+      setError("An unexpected error occurred. Please try again.");
+      setWeatherData(null);
     }
   };
 
