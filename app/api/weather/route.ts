@@ -20,10 +20,14 @@ export async function GET(req: Request) {
   try {
     const response = await axios.get<WeatherData>(API_URL);
     return NextResponse.json(response.data);
-  } catch (err: any) {
-    const status = err.response?.status || 500;
+  } catch (error) {
+    const axiosError = error as {
+      response?: { status: number; data?: { message: string } };
+    };
+
+    const status = axiosError.response?.status || 500;
     let message = "Failed to fetch weather data.";
-    
+
     if (status === 404) {
       message = "City not found. Please enter a valid city name.";
     } else if (status === 401) {

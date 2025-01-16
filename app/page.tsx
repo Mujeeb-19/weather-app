@@ -33,6 +33,7 @@ export default function Home() {
         setWeatherData(null); // Clear data on error
       }
     } catch (err) {
+      console.error("Error fetching weather data:", err); // Log the error
       setError("An unexpected error occurred. Please try again.");
       setWeatherData(null);
     } finally {
