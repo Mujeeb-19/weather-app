@@ -9,6 +9,7 @@ export default function Home() {
   const [city, setCity] = useState<string>("");
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleFetchWeather = async () => {
     if (!city.trim()) {
@@ -18,6 +19,7 @@ export default function Home() {
     }
 
     setError(""); // Clear any previous error
+    setLoading(true); // Start loading
 
     try {
       const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
@@ -28,11 +30,13 @@ export default function Home() {
       } else {
         const errorMessage = await response.json();
         setError(errorMessage.message || "Failed to fetch weather data.");
-        setWeatherData(null); // Clear data if an error occurs
+        setWeatherData(null); // Clear data on error
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
       setWeatherData(null);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -47,10 +51,11 @@ export default function Home() {
           placeholder="Enter city"
           className={styles.input}
         />
-        <button onClick={handleFetchWeather} className={styles.button}>
-          Get Weather
+        <button onClick={handleFetchWeather} className={styles.button} disabled={loading}>
+          {loading ? "Loading..." : "Get Weather"}
         </button>
       </div>
+      {loading && <div className={styles.loader}></div>}
       {error && <p className={styles.error}>{error}</p>}
       {weatherData && <WeatherCard weather={weatherData} />}
     </div>

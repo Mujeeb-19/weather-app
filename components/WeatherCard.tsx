@@ -1,4 +1,4 @@
-import styles from "../app/page.module.css";
+import styles from "./WeatherCard.module.css";
 import { WeatherData } from "@/types/WeatherData";
 
 interface WeatherCardProps {
@@ -9,12 +9,12 @@ export default function WeatherCard({ weather }: WeatherCardProps) {
   const { name, main, weather: conditions } = weather;
 
   return (
-    <div className={styles.weatherCard}>
-      <h2>Weather in {name}</h2>
-      <p>Temperature: {main.temp}°C</p>
-      <p>Feels Like: {main.feels_like}°C</p>
-      <p>Condition: {conditions[0].description}</p>
-      <p>Pressure: {main.pressure}</p>
+    <div className={styles.card}>
+      <h2 className={styles.city}>Weather in {name}</h2>
+      <p className={styles.temp}>{Math.round(main.temp)}°C</p>
+      <p className={styles.description}>{conditions[0].description}</p>
+      <p className={styles.info}>Feels Like: {Math.round(main.feels_like)}°C</p>
+      <p className={styles.info}>Pressure: {main.pressure} hPa</p>
     </div>
   );
 }
